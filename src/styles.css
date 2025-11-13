@@ -1,0 +1,116 @@
+/* src/styles.css - modern teal glow theme */
+:root {
+  --bg: #071122;
+  --card: #0b1220;
+  --muted: #94a3b8;
+  --accent: #37c0df; /* teal */
+  --accent-2: #60a5fa;
+  --glow: 0 8px 32px rgba(56, 199, 223,0.12);
+}
+
+* { box-sizing: border-box; }
+html,body,#root { height:100%; margin:0; }
+body { background: linear-gradient(180deg,#021026,#071122); color:#e6eef8; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; }
+
+.app { min-height:100vh; display:flex; flex-direction:column; }
+.topbar { padding:12px 16px; border-bottom: 1px solid rgba(255,255,255,0.03); display:flex; align-items:center; }
+.brand { display:flex; align-items:center; gap:12px; }
+.logo { width:36px; height:36px; }
+.topbar h1 { margin:0; font-size:1.2rem; letter-spacing:1px; }
+
+.main { flex:1; display:flex; align-items:center; justify-content:center; padding:18px; }
+
+/* Game layout */
+.game-root { width: 100%; max-width:520px; }
+.hud { display:flex; justify-content:space-between; margin-bottom:12px; align-items:center; }
+.hud-item { text-align:center; }
+.hud-label { font-size:0.75rem; color:var(--muted); }
+.hud-value { font-size:1.6rem; font-weight:700; color:var(--accent); }
+
+/* grid */
+.grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: transparent; padding: 6px; border-radius: 12px; }
+.cell { aspect-ratio: 1/1; border-radius: 4px; border: 1px solid rgba(255,255,255,0.03); cursor: pointer; display:flex; align-items:center; justify-content:center; }
+.cell-white { background: #f8fafc05; } /* subtle white */
+.cell-black { background: linear-gradient(180deg,#ffffff,#99bfc9); box-shadow: var(--glow); position:relative; transition: transform 0.02s ease; }
+.cell-black:active { transform: scale(0.96); }
+.dot { width: 20%; height: 20%; background: radial-gradient(circle at 30% 30%, #9ff1ff, #37c0df); border-radius: 50%; box-shadow: 0 6px 18px rgba(56,199,223,0.18); }
+
+/* controls */
+.controls { margin-top:12px; display:flex; flex-direction:column; gap:8px; align-items:center; color:var(--muted); }
+.control-row { display:flex; gap:12px; align-items:center; }
+.btn { background: transparent; border: 1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:10px; color: #e6eef8; cursor:pointer; }
+
+/* result */
+.result-root { width:100%; max-width:520px; display:flex; flex-direction:column; gap:12px; align-items:center; }
+.result-card { background: linear-gradient(180deg,#071225,#061323); padding:18px; border-radius:12px; border: 1px solid rgba(255,255,255,0.03); width:100%; text-align:center; }
+.verdict { color:#ffd87d; font-size:1.15rem; margin:8px 0; }
+.result-stats { display:flex; gap:12px; justify-content:center; color:var(--muted); margin-top:8px; }
+
+/* footer */
+.footer { text-align:center; padding:12px 8px; color:var(--muted); font-size:0.9rem; }
+
+/* responsive */
+@media (max-width:480px) {
+  .grid { gap:8px; }
+  .dot { width:24%; height:24%; }
+  .hud-value { font-size:1.3rem; }
+}
+/* Timebar container (backdrop) */
+.timebar-container {
+  width: 100%;
+  height: 10px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* The fill shrinks by scaling X from the center */
+.timebar-fill {
+  width: 100%;
+  height: 70%; /* slight inset for aesthetic */
+  background: linear-gradient(90deg, #14b8a6, #3b82f6); /* teal -> blue */
+  border-radius: 8px;
+  transform-origin: center center; /* crucial: shrink from center */
+  transform: scaleX(1);
+  transition: transform 0.12s linear, background 220ms ease;
+  box-shadow: 0 6px 18px rgba(56,199,223,0.08);
+}
+
+/* Warning (yellow) when under warnThreshold */
+.timebar-fill.warn {
+  background: linear-gradient(90deg, #facc15, #f59e0b); /* yellow -> orange */
+    animation: timebar-shake 1ms linear infinite;
+  box-shadow: 0 8px 26px rgba(239,68,68,0.14);
+}
+
+/* Low (red) when under lowThreshold — plus shake */
+.timebar-fill.low {
+  background: linear-gradient(90deg, #ef4444, #f97316); /* red -> orange */
+  animation: timebar-shake 1ms linear infinite;
+  box-shadow: 0 8px 26px rgba(239,68,68,0.14);
+}
+
+/* subtle shake animation (small translateX oscillation) */
+@keyframes timebar-shake {
+  0%   { transform: scaleX(var(--progress,1)) translateX(0); }
+  20%  { transform: scaleX(var(--progress,1)) translateX(-2px); }
+  40%  { transform: scaleX(var(--progress,1)) translateX(2px); }
+  60%  { transform: scaleX(var(--progress,1)) translateX(-1px); }
+  80%  { transform: scaleX(var(--progress,1)) translateX(1px); }
+  100% { transform: scaleX(var(--progress,1)) translateX(0); }
+}
+
+/* if you want the container to pulse slightly when low (optional) */
+.timebar-fill.low::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  box-shadow: 0 0 24px rgba(249,115,22,0.08);
+  pointer-events: none;
+}
